@@ -1,10 +1,11 @@
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class HashMapTest {
 
     private boolean running = true;
-    private HashMap<String, Integer> people = new HashMap<String, Integer>();
+    private ConcurrentHashMap<String, Integer> people = new ConcurrentHashMap<String, Integer>();
 
     private void addPerson() {
 	people.put(RandomUtils.randomString(), RandomUtils.randomInteger());

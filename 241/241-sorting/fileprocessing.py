@@ -42,15 +42,15 @@ def readFile(filepath, sortmethod, outputfile):
 
 	print('Writing...')
 	with open(outputfile, 'a') as outputFile:
-		outputFile.write(str(runtime) + "\n")
+		outputFile.write(str(words)) #(str(runtime) + "\n")
 
 	return words
 
 ####### Executables
-for i in range(10):
-	readFile("pride-and-prejudice.txt", "selection", "selectionsortoutput.txt")
-	readFile("pride-and-prejudice.txt", "insertion", "insertionsortoutput.txt")
-	# readFile("pride-and-prejudice.txt", "heap", "heapsortoutput.txt")
-	# readFile("pride-and-prejudice.txt", "merge", "mergesortoutput.txt")
-	# readFile("pride-and-prejudice.txt", "quick", "quicksortoutput.txt")
-	# readFile("pride-and-prejudice.txt", "library", "librarysortoutput.txt")
+# for i in range(10):
+# readFile("pride-and-prejudice.txt", "selection", "selectionsortoutput.txt")
+# readFile("pride-and-prejudice.txt", "insertion", "insertionsortoutput.txt")
+readFile("pride-and-prejudice.txt", "heap", "heapsortoutput.txt")
+readFile("pride-and-prejudice.txt", "merge", "mergesortoutput.txt")
+readFile("pride-and-prejudice.txt", "quick", "quicksortoutput.txt")
+# readFile("pride-and-prejudice.txt", "library", "librarysortoutput.txt")

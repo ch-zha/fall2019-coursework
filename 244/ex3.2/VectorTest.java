@@ -6,20 +6,26 @@ public class VectorTest {
     private Vector<String> people = new Vector<String>();
 
     private void addPerson() {
-	people.add(RandomUtils.randomString());
+    	synchronized (people) {
+			people.add(RandomUtils.randomString());
+		}
     }
 
     private String getLast() {
-	int lastIndex = people.size() - 1;
-	if (lastIndex >= 0)
-	    return people.get(lastIndex);
-	else return "";
+    	synchronized (people) {
+			int lastIndex = people.size() - 1;
+			if (lastIndex >= 0)
+				return people.get(lastIndex);
+			else return "";
+		}
     }
 
     private void deleteLast() {
-	int lastIndex = people.size() - 1;
-	if (lastIndex >= 0)
-	    people.remove(lastIndex);
+    	synchronized (people) {
+			int lastIndex = people.size() - 1;
+			if (lastIndex >= 0)
+				people.remove(lastIndex);
+		}
     }
 
     public void run() {
@@ -28,11 +34,11 @@ public class VectorTest {
 		public void run() {
 		    Thread.currentThread().setName("Getter");
 		    while (running) {
-			String person = getLast();
-			System.out.println("Last: " + person);
-			try {
-			    Thread.sleep(200);
-			} catch (InterruptedException e) {}
+				String person = getLast();
+				System.out.println("Last: " + person);
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {}
 		    }
 		}
 	    }).start();

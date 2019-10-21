@@ -101,16 +101,17 @@ def findDiffInAllTypes(filepath):
 	pass
 
 ####### Executables
-for i in range(10):
-# 	listoutputfile = "linkedlist" + str(i) + ".txt"
-# 	treeoutputfile = "bintree" + str(i) + ".txt"
-	hashoutputfile = "hashtable" + str(i) + ".txt"
+# for i in range(10):
+i = 0
+listoutputfile = "linkedlist" + str(i) + ".txt"
+treeoutputfile = "bintree" + str(i) + ".txt"
+hashoutputfile = "hashtable" + str(i) + ".txt"
 
-# 	listset = readFile('pride-and-prejudice.txt', 'linkedlist', listoutputfile)
-# 	findDiff('words-shuffled.txt', listset, listoutputfile)
+listset = readFile('pride-and-prejudice.txt', 'linkedlist', listoutputfile)
+findDiff('words-shuffled.txt', listset, listoutputfile)
 
-# 	treeset = readFile('pride-and-prejudice.txt', 'bintree', treeoutputfile)
-# 	findDiff('words-shuffled.txt', treeset, treeoutputfile)
+treeset = readFile('pride-and-prejudice.txt', 'bintree', treeoutputfile)
+findDiff('words-shuffled.txt', treeset, treeoutputfile)
 
-	hashset = readFile('pride-and-prejudice.txt', 'hash', hashoutputfile)
-	findDiff('words-shuffled.txt', hashset, hashoutputfile)
+hashset = readFile('pride-and-prejudice.txt', 'hash', hashoutputfile)
+findDiff('words-shuffled.txt', hashset, hashoutputfile)

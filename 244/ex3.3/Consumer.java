@@ -1,9 +1,11 @@
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public class Consumer implements Runnable {
-    private ??? queue;
+    private LinkedBlockingQueue<Message> queue;
     private int id;
 
-    public Consumer(???, int n) {
+    public Consumer(LinkedBlockingQueue<Message> q, int n) {
 	queue = q;
 	id = n;
     }
@@ -13,12 +15,15 @@ public class Consumer implements Runnable {
 	int count = 0;
 	do {
 	    try {
-		msg = ???; // Get a message from the queue
-		count++;
-		RandomUtils.print("Consumed " + msg.get(), id);
-		Thread.sleep(RandomUtils.randomInteger());
+			msg = queue.poll(1000, TimeUnit.MILLISECONDS); // Get a message from the queue
+			count++;
+			RandomUtils.print("Consumed " + msg.get(), id);
+			Thread.sleep(RandomUtils.randomInteger());
+			if (msg.get().equals("stop")) {
+				queue.put(new Message("stop"));
+			}
 	    } catch (InterruptedException e) {
-		e.printStackTrace();
+			e.printStackTrace();
 	    }
 	} while (msg.get() != "stop");
 	// Don't count the "stop" message

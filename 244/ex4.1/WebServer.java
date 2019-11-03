@@ -18,7 +18,8 @@ import java.util.concurrent.TimeUnit;
 // The tutorial can be found just here on the SSaurel's Blog : 
 // https://www.ssaurel.com/blog/create-a-simple-http-web-server-in-java
 // Each Client Connection will be managed in a dedicated Thread
-public class WebServer { 
+public class WebServer {
+
 	
     static final File WEB_ROOT = new File(".");
     static final String DEFAULT_FILE = "index.html";
@@ -33,13 +34,14 @@ public class WebServer {
 	
     // Client Connection via Socket Class
     private Socket connect;
+
+	private static final ExecutorService exec = Executors.newFixedThreadPool(6);
 	
     public WebServer(Socket c) {
 		connect = c;
     }
-	
+
     public static void main(String[] args) {
-    	ExecutorService exec = Executors.newFixedThreadPool(5);
 		try {
 			ServerSocket serverConnect = new ServerSocket(PORT);
 			System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
@@ -48,15 +50,21 @@ public class WebServer {
 			while (true) {
 				WebServer myServer = new WebServer(serverConnect.accept());
 
-				if (verbose) {
-					System.out.println("Connection opened. (" + new Date() + ")");
-				}
-
 				Runnable task = new Runnable() {
 					public void run() {
-						myServer.handleRequest();
+						try {
+							if (verbose) {
+								System.out.println(Thread.currentThread().getName());
+								System.out.println("Connection opened. (" + new Date() + ")");
+							}
+							myServer.handleRequest();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
 				};
+
+//				new Thread(task).start();
 				exec.execute(task);
 			}
 
@@ -65,7 +73,7 @@ public class WebServer {
 		}
     }
 
-    public void handleRequest() {
+    public void handleRequest() throws InterruptedException {
 		// we manage our particular client connection
 		BufferedReader in = null; PrintWriter out = null; BufferedOutputStream dataOut = null;
 		String fileRequested = null;
@@ -119,6 +127,8 @@ public class WebServer {
 			if (fileRequested.endsWith("/")) {
 				fileRequested += DEFAULT_FILE;
 			}
+
+			Thread.sleep(100);
 
 			File file = new File(WEB_ROOT, fileRequested);
 			int fileLength = (int) file.length();

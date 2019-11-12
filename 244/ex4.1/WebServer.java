@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 // The tutorial can be found just here on the SSaurel's Blog : 
 // https://www.ssaurel.com/blog/create-a-simple-http-web-server-in-java
 // Each Client Connection will be managed in a dedicated Thread
-public class WebServer {
+public class WebServer implements Runnable {
 
 	
     static final File WEB_ROOT = new File(".");
@@ -50,22 +50,11 @@ public class WebServer {
 			while (true) {
 				WebServer myServer = new WebServer(serverConnect.accept());
 
-				Runnable task = new Runnable() {
-					public void run() {
-						try {
-							if (verbose) {
-								System.out.println(Thread.currentThread().getName());
-								System.out.println("Connection opened. (" + new Date() + ")");
-							}
-							myServer.handleRequest();
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					}
-				};
+				if (verbose) {
+					System.out.println("Connection opened. (" + new Date() + ")");
+				}
 
-//				new Thread(task).start();
-				exec.execute(task);
+				exec.execute(myServer);
 			}
 
 		} catch (IOException e) {
@@ -73,7 +62,12 @@ public class WebServer {
 		}
     }
 
-    public void handleRequest() throws InterruptedException {
+    public void run() {
+    	System.out.println(Thread.currentThread().getName());
+    	handleRequest();
+	}
+
+    public void handleRequest() {
 		// we manage our particular client connection
 		BufferedReader in = null; PrintWriter out = null; BufferedOutputStream dataOut = null;
 		String fileRequested = null;
@@ -127,8 +121,6 @@ public class WebServer {
 			if (fileRequested.endsWith("/")) {
 				fileRequested += DEFAULT_FILE;
 			}
-
-			Thread.sleep(100);
 
 			File file = new File(WEB_ROOT, fileRequested);
 			int fileLength = (int) file.length();

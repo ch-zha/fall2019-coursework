@@ -45,7 +45,7 @@ select account_number, sum(line_item_amount) as line_item_amount_sum
 	from invoice_line_items
 group by account_number with rollup;
 
--- #7 (Wrong, needs to be fixed)
+-- #7
 select vendor_name, count(distinct account_number) as number_of_accounts
 	from vendors
 		join invoices i using (vendor_id)
@@ -61,3 +61,5 @@ select if(grouping(terms_id) = 1, 'Terms Summary', terms_id) as terms_id,
     sum(invoice_total - payment_total - credit_total) as balance_due_sum
 	from invoices
     group by terms_id, vendor_id with rollup;
+    
+-- #9

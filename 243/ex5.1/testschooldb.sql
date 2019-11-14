@@ -3,6 +3,7 @@ use schooldb;
 select * from students;
 select * from courses;
 select * from course_enrollments;
+select * from course_schedule;
 
 SELECT sid, CONCAT(first_name, ' ', last_name) AS student_name
 	FROM course_enrollments JOIN students USING (sid)

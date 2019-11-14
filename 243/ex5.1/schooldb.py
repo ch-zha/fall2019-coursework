@@ -58,14 +58,17 @@ def register_new_student(input_elements):
 # Then follow prompts.
 def add_course():
 	course_name = raw_input("Please enter the course name: ") #TODO make course name unique
-	course_days = {}
-	course_hours = {0}
+	course_days = []
+	course_hours = [0]
 
 	while len(course_days) != len(course_hours):
+		course_days = []
+		course_hours = []
 		course_times_entered = raw_input("Please enter a comma-separated list of days and times (i.e. Tu 12:00, W 14:00): ") #TODO support multiple days
 		course_times = course_times_entered.split(",")
-		course_days = course_time.split()[0] #change to regex match
-		course_hours = course_time.split()[1] #change to regex match
+		for course in course_times:
+			course_days.append(course.split()[0]) #change to regex match
+			course_hours.append(course.split()[1]) #change to regex match
 		if len(course_days) != len(course_hours):
 			print 'Number of weekdays and times entered do not match'
 
@@ -79,13 +82,18 @@ def add_course():
 
 	# get course_id
 	cursor.execute(get_course_id, (course_name,))
-	course_id = cursor.get(0)
+	course_id = cursor.fetchone()
+	print course_id
+	if course_id is None:
+		print 'Error adding class. Please check your connection and try again.'
+		return
 
 	# add times
 	i = 0
 	while i < len(course_days):
-		cursor.execute(add_times, (course_id, course_days[i], course_hours[i]))
-		cursor.commit()
+		cursor.execute(add_times, (course_id[0], course_days[i], course_hours[i]))
+		cnx.commit()
+		i += 1
 
 	cursor.close()
 	print '''Added course "%s"''' %(course_name)
@@ -140,9 +148,9 @@ def get_student_schedule_by_day(input_elements):
 	if len(input_elements) != 3:
 		print("Please include a SID and day in your command.\ne.g. d 1 M")
 
-	query_day = (	"SELECT DISTINCT course_id, course_name, course_time "
-					"FROM course_enrollments JOIN courses USING (course_id) JOIN course_schedule USING (course_id)"
-					"WHERE sid = %s AND course_day = %s" #Edit to support sets with multiple values?
+	query_day = (	"SELECT DISTINCT course_id, course_name, time AS course_time "
+					"FROM course_enrollments JOIN courses USING (course_id) JOIN course_schedule USING (course_id) "
+					"WHERE sid = %s AND day_of_week = %s "
 					"ORDER BY course_time")
 	cursor = cnx.cursor()
 	cursor.execute(query_day, (input_elements[1], input_elements[2]))
